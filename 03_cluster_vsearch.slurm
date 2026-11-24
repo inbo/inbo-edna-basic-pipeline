@@ -1,9 +1,8 @@
 #!/bin/bash -l
 
 #SBATCH --clusters=wice
-#SBATCH --partition=batch 
-#SBATCH --nodes=1
 #SBATCH --ntasks=18
+#SBATCH --nodes=1
 #SBATCH --time=01:00:00
 #SBATCH --out=vsearch-OTU-%j.out
 #SBATCH --job-name=vsearch-OTU-pipeline

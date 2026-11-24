@@ -1,8 +1,6 @@
 #!/bin/bash -l
 
 #SBATCH --clusters=wice
-#SBATCH --partition=batch
-#SBATCH --account=lp_inbo
 #SBATCH --ntasks=6
 #SBATCH --nodes=1
 #SBATCH --time=00:20:00
@@ -15,7 +13,7 @@
 # Author:	Annelies Haegeman - Flanders Research Institute for Agriculture, Fisheries and Food, Melle, Belgium
 #  - https://gitlab.com/ahaegeman/eDNA_INBO-ILVO
 # Author: Nick Dillen - Research Institute for Nature and Forest (INBO), Belgium
-#	Extensively modified by: Io Deflem - Research Institute for Nature and Forest (INBO), Belgium
+# Author: Io Deflem - Research Institute for Nature and Forest (INBO), Belgium
 # Maintainer: Nick Dillen
 
 # This script should be run on an HPC system with SLURM job sheduler. 

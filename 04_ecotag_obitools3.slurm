@@ -1,9 +1,8 @@
 #!/bin/bash -l
 
 #SBATCH --clusters=wice
-#SBATCH --partition=batch 
-#SBATCH --nodes=1
 #SBATCH --ntasks=1
+#SBATCH --nodes=1
 #SBATCH --time=00:15:00
 #SBATCH --out=obi-ecotag-%j.out
 #SBATCH --job-name=obi-ecotag
