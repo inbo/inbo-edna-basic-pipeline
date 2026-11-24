@@ -1,0 +1,19 @@
+{
+    "name":"Riaz",
+    "ref":"https://doi.org/10.1093/nar/gkr732",
+    "fastq_mergepairs":{
+       "fastq_minovlen":20
+    },
+    "cutadapt":{
+       "adapter":"CTAGAGGAGCCTGTTCTA",
+       "front":"ACTGGGATTAGATACCCC",
+       "discard-untrimmed":true,
+       "error-rate":0.15
+    },
+    "fastq_filter":{
+       "fastq_maxee":0.5,
+       "fastq_maxns":"",
+       "fastq_minlen":35,
+       "fastq_maxlen":160
+    }
+}
