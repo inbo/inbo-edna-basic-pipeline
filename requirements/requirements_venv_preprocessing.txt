@@ -13,7 +13,7 @@ exceptiongroup==1.2.2
 Genshi==0.7.9
 humanfriendly==10.0
 humanize==4.12.2
-idna==3.10
+idna==3.15
 importlib_metadata==8.6.1
 iniconfig==2.1.0
 isal==1.7.2
