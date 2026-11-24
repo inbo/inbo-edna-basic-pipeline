@@ -121,11 +121,12 @@ sbatch 03_cluster_vsearch.slurm -i all_uniqs.fasta.gz -r 2
 ### 4. Taxonomic annotation
 
 - Requirement: an OBITools3 DMS with following VIEWS:
-  - `/taxonomy/taxdump` (used taxonomy)
+  - `taxonomy/taxdump` (used taxonomy)
   - `ecopcr_final_0.995` (reference sequences) 
 
 > [!NOTE]
-> Methodology to create the custom reference database with OBITools: https://github.com/inbo/prj_edna_refdb
+> Methodology to create the custom reference database with OBITools:
+> - https://github.com/inbo/prj_edna_refdb
 
 ```
 sbatch 04_ecotag_obitools3.slurm -i zotus.fasta -R refdb.obidms
@@ -135,15 +136,15 @@ sbatch 04_ecotag_obitools3.slurm -i zotus.fasta -R refdb.obidms
 
 In the [gendiver R-package](https://github.com/inbo/gendiver) you can find utility functions to interact with the INBO eDNA pipeline output.
 
-### Quality Control
+#### Quality Control
 
 You can generate QC-reports for each step of the pipeline using the `gendiver::report.*` functions
 
-### Operational Data
+#### Operational Data
 
 You can read the OTU table and taxonomy file to a data.frame in R using the `gendiver::read.otu_table*` and `gendiver::read.taxonomy*` functions
 
-### Dependencies
+## Dependencies
 
 #### Software stack
 
@@ -164,7 +165,7 @@ You can also find the required software for the virtual envs in the respective `
 
 INBO users can easily get all required additional software by adding the path to the shared software installations to their `$PATH` variable.
 
-### References
+## References
 
 **VSEARCH**
 
