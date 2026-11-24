@@ -1,12 +1,11 @@
 # inbo-edna-basic-pipeline
 
-
-This repository contains the basic bioinformatics steps used in most INBO eDNA pipelines to process raw Illumina paired-end sequencing data to Operational Data (OTU table with taxonomy) for use in downstream data analysis.
+This repository contains basic bioinformatics steps to process raw Illumina paired-end sequencing data into operational data (OTU table with taxonomy) used in downstream data analysis at INBO.
 
 This pipeline is part of the INBO eDNA metabarcoding workflow(s) described in https://inbo.github.io/edna-workflows/
 
 > [!IMPORTANT]
-> Currently this repository is targeted to INBO users with access to the [KUL Tier-2 HPC (VSC)](https://www.vscentrum.be/).
+> Currently this repository is targeted at (INBO) users with access to the [KUL Tier-2 HPC (VSC)](https://www.vscentrum.be/).
 > In principle the described pipelines can be easily adapted to run on other machines: the methodology is straightforward and the used software is well documented, free and open source.
 > See [Dependencies](#dependencies) and [References](#references)
 
@@ -15,30 +14,26 @@ This pipeline is part of the INBO eDNA metabarcoding workflow(s) described in ht
 
 The basic eDNA workflow consists of:
 
-`01_demultiplex.slurm`
+- `01_demultiplex.slurm`
+  - Demultiplexing of dual-indexed libraries with in-line barcodes of variable size on undirectionally ligated fragments.
 
-- Demultiplexing
+- `02_preprocess.slurm`
+  - Paired-end read merging
+  - Primer trimming
+  - Basic read QC filter
+  - Dereplication (per sample)
 
-`02_preprocess.slurm`
+- `03_cluster_vsearch.slurm`
+  - Dereplication (global)
+  - Clustering/denoising
+  - Chimera removal
 
-- Paired-end read merging
-- Primer trimming
-- Basic read QC filter
-- Dereplication (per sample)
-
-`03_cluster_vsearch.slurm`
-
-- Dereplication (global)
-- Clustering/denoising
-- Chimera removal
-
-`04_ecotag_obitools3.slurm`
-
-- Taxonomic annotation
+- `04_ecotag_obitools3.slurm`
+  - Taxonomic annotation
 
 ## Preparation and set-up (INBO users)
 
-- Clone this repo to an appropriate location
+- Clone this repo to an appropriate location (`$VSC_DATA`)
 
 ```
 git clone https://github.com/inbo/inbo-edna-basic-pipeline.git
@@ -86,10 +81,6 @@ P3_barcodes.tsv,P3_R1.fastq.gz,P3_R2.fastq.gz
 sbatch --array=1-5 01_demultiplex.slurm -d data.csv
 ```
 
-> [!NOTE]
-> In the default INBO metabarcoding workflow fragments are **not** cloned directionally. 
-> During demultiplexing reads have to be checked in both directions for the indexes.
-
 ### 2. Preprocessing
 
 - Choose and copy a configuration file from the `config/` dir
@@ -103,7 +94,7 @@ Sample3_R1.fastq.gz,Sample3_R2.fastq.gz,config.json
 [...]
 ```
 
-- Submit as a job array (e.g. for 96 samples, with maximum 24 concurrently):
+- Submit as a job array (e.g. for 96 samples, with maximum 24 running concurrently):
 
 ```
 sbatch --array=1-96%24 02_preprocess.slurm -d data.csv
@@ -166,6 +157,10 @@ You can also find the required software for the virtual envs in the respective `
 INBO users can easily get all required additional software by adding the path to the shared software installations to their `$PATH` variable.
 
 ## References
+
+**Original INBO-ILVO eDNA pipeline**
+
+Haegeman Annelies. (2020). eDNA_INBO-ILVO_Release1.0.0 (Version v1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.3731310
 
 **VSEARCH**
 
