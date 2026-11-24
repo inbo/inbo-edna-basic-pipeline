@@ -6,7 +6,7 @@ This repository contains the basic bioinformatics steps used in most INBO eDNA p
 This pipeline is part of the INBO eDNA metabarcoding workflow(s) described in https://inbo.github.io/edna-workflows/
 
 > [!IMPORTANT]
-> Currently this repository is targeted to INBO users with access to the Tier-2 HPC of the KUL-VSC.
+> Currently this repository is targeted to INBO users with access to the [KUL Tier-2 HPC (VSC)](https://www.vscentrum.be/).
 > In principle the described pipelines can be easily adapted to run on other machines: the methodology is straightforward and the used software is well documented, free and open source.
 > See [Dependencies](#dependencies) and [References](#references)
 
@@ -70,9 +70,6 @@ Sample3    AATCC   CGTAGGTGTT
 [...]
 ```
 
-> [!NOTE]
-> You can use the `report.samplesheet()` function from https://github.com/inbo/gendiver
-
 - Create a `data.csv` with 3 columns -> "BAR","FASTQF","FASTQR". The data in the rows correspond to the pools (FASTQ files) you need to demultiplex.
 
 ```
@@ -91,7 +88,7 @@ sbatch --array=1-5 01_demultiplex.slurm -d data.csv
 
 > [!NOTE]
 > In the default INBO metabarcoding workflow fragments are **not** cloned directionally. 
-> During demultiplexing reads are checked in both directions for the indexes.
+> During demultiplexing reads have to be checked in both directions for the indexes.
 
 ### 2. Preprocessing
 
@@ -100,16 +97,16 @@ sbatch --array=1-5 01_demultiplex.slurm -d data.csv
 
 ```
 "FASTQF","FASTQR","CONFIG"
-S1_R1.fastq.gz,S1_R2.fastq.gz,config.json
-S2_R1.fastq.gz,S2_R2.fastq.gz,config.json
-S3_R1.fastq.gz,S3_R2.fastq.gz,config.json
+Sample1_R1.fastq.gz,Sample1_R2.fastq.gz,config.json
+Sample2_R1.fastq.gz,Sample2_R2.fastq.gz,config.json
+Sample3_R1.fastq.gz,Sample3_R2.fastq.gz,config.json
 [...]
 ```
 
-- Submit as a job array (e.g. for 96 samples):
+- Submit as a job array (e.g. for 96 samples, with maximum 24 concurrently):
 
 ```
-sbatch --array=1-96 02_preprocess.slurm -d data.csv
+sbatch --array=1-96%24 02_preprocess.slurm -d data.csv
 ```
 
 ### 3. Clustering/denoising
@@ -123,24 +120,26 @@ sbatch 03_cluster_vsearch.slurm -i all_uniqs.fasta.gz -r 2
 
 ### 4. Taxonomic annotation
 
-- Requirement: an OBITools3 DMS with reference sequences
+- Requirement: an OBITools3 DMS with following VIEWS:
+  - `/taxonomy/taxdump` (used taxonomy)
+  - `ecopcr_final_0.995` (reference sequences) 
 
 > [!NOTE]
-> Methodology to create a custom reference database with OBITools: https://github.com/inbo/prj_edna_refdb
+> Methodology to create the custom reference database with OBITools: https://github.com/inbo/prj_edna_refdb
 
 ```
 sbatch 04_ecotag_obitools3.slurm -i zotus.fasta -R refdb.obidms
 ```
 
-### Extra: follow along in R
+## Extra
 
-In https://github.com/inbo/gendiver there are some utility functions to interact with the pipeline output.
+In the [gendiver R-package](https://github.com/inbo/gendiver) you can find utility functions to interact with the INBO eDNA pipeline output.
 
-#### Quality Control
+### Quality Control
 
-You can generate QC reports for each step of the pipeline using the `gendiver::report.*` functions
+You can generate QC-reports for each step of the pipeline using the `gendiver::report.*` functions
 
-#### Operational Data
+### Operational Data
 
 You can read the OTU table and taxonomy file to a data.frame in R using the `gendiver::read.otu_table*` and `gendiver::read.taxonomy*` functions
 
@@ -148,8 +147,8 @@ You can read the OTU table and taxonomy file to a data.frame in R using the `gen
 
 #### Software stack
 
-The basic bioinformatics pipeline is run on a HPC system with pre-installed software modules. 
-The main used software modules at VSC KUL Tier-2 are:
+The basic bioinformatics pipeline is run on a [HPC system](https://docs.vscentrum.be/leuven/tier2_hardware.html) with [pre-installed software modules](https://docs.vscentrum.be/compute/software/using_software/module_system_basics.html). 
+This pipeline uses the following software modules (KUL Tier-2):
 
 - `atools/1.5.1.lua`
 - `Python/3.11.5-GCCcore-13.2.0` (cutadapt)
@@ -161,9 +160,9 @@ The main used software modules at VSC KUL Tier-2 are:
 Based on both python versions we created 2 virtual environments. These are shared in the INBO project directory (`stg_00184`). 
 You can also find the required software for the virtual envs in the respective `requirements.txt` files.
 
-#### Shared binaries
+#### Shared project software
 
-INBO users can add the path to the shared software installations in the project dir to their `$PATH` variable to have all other software available.
+INBO users can easily get all required additional software by adding the path to the shared software installations to their `$PATH` variable.
 
 ### References
 
