@@ -160,6 +160,8 @@ INBO users can easily get all required additional software by adding the path to
 
 **Original INBO-ILVO eDNA pipeline**
 
+https://gitlab.com/ahaegeman/eDNA_INBO-ILVO
+
 Haegeman Annelies. (2020). eDNA_INBO-ILVO_Release1.0.0 (Version v1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.3731310
 
 **VSEARCH**
